@@ -1,42 +1,40 @@
+
 import cv2
 import numpy as np
 import imutils
-im1=cv2.imread('sample_school_1.jpg')
-im2=cv2.imread('sample_school_2.jpg')
 
-class sticher(self,imgA,imgB):
-    def __init__(self):
-        print('initialized')
+#function for return keypoints and features of an image    
+def detectkps_describefeatures(img):
+    img=cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+    sift_descriptor=cv2.xfeatures2d.SIFT_create()
+    (kps,features)=sift_descriptor.detectAndCompute(img,None)
+    return (kps,features)
+
+#function for matching descriptors between two image
+def match_descriptors(featuresA,featuresB):
+    sift_matcher=cv2.DescriptorMatcher_create("Brute Force")
+    matches=sift_matcher.knnMatch(featuresA,featuresB,2)
+    return matches
+
+ #function for computing homography matrix
+ def compute_homography:
+     print('starting homography')   
     
-    def image_sticher(self,img1,img2):
-        imgA=img1
-        imgB=img2
 
-        #Detect keypoints and features
-        (kpsA,featuresA)=self.detectAnddescribe(imgA)
-        (KpsB,featuresB)=self.detectAnddescribe(imgB)
+im1=cv2.imread('D:\Vision Challenge\Image stiching\sample_school_1.jpg')
+im2=cv2.imread('D:\Vision Challenge\Image stiching\sample_school_2.jpg')
 
-        #Match features obtained
-        M=self.MatchKeyPoints(kpsA,kpsB,featuresA,featuresB)
+#detect keypoints for first image
+(kpsA,featuresA)=detectkps_describefeatures(im1)
+(kpsB,featuresB)=detectkps_describefeatures(im2)
 
-        if M is None:
-            print('No key points matched. Try other algorithms')
-            return None
-        
-        #Get the Matches,Homography matrix,status
-        (Matches,H,status)=M
+#print(kpsB)
 
-        #apply warp transform to stich images together
-        result=cv2.warpPerspective(imgA,H,
-        (imgA.shape[1] + imgB.shape[1], imgA.shape[0]))
-		result[0:imgB.shape[0], 0:imgB.shape[1]] = imgB
 
-        if showMatches:
-            vis = self.drawMatches(imgA, imgB, kpsA, kpsB, Matches,
-				status)
-			# return a tuple of the stitched image and the
-			# visualization
-			return (result, vis)
+
+
+
+
 
 
 
