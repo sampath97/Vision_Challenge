@@ -15,15 +15,23 @@ args=vars(ap.parse_args())
 
 #Store the image and convert to grayscale
 img=cv2.imread(args["image"])
+img=imutils.resize(img, height = 500)
 gray=cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-
-#perform gaussian blur and do thresholding
-gray_blur=cv2.GaussianBlur(gray,(3,3),1)
-_,gray_bin=cv2.threshold(gray_blur,80,255,cv2.THRESH_BINARY_INV)
-
-cv2.imshow('binary image',gray_bin)
+gray = cv2.GaussianBlur(gray, (5, 5), 0)
+edged = cv2.Canny(gray, 75, 200)
+# show the original image and the edge detected image
+print("STEP 1: Edge Detection")
+cv2.imshow("Image", img)
+cv2.imshow("Edged", edged)
 cv2.waitKey(0)
+#perform gaussian blur and do thresholding
+#gray_blur=cv2.GaussianBlur(gray,(3,3),1)
+#_,gray_bin=cv2.threshold(gray_blur,80,255,cv2.THRESH_BINARY_INV)
+'''
+cv2.imshow('binary image',gray)
 
+
+'''
 '''
 #detect contours in image
 cnts=cv2.findContours(gray_bin,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
@@ -36,7 +44,9 @@ for contour in cnts:
 cv2.putText(img,'Num contours detected:'+str(num_cnts),(0,20),cv2.FONT_HERSHEY_SIMPLEX,0.35,(0,0,255))
 
 '''
-text=pytesseract.image_to_string(gray_blur)
+'''
+text=pytesseract.image_to_string(gray)
 print(text)
 #Resize the image
 #gray=imutils.resize(gray,width=400,height=400)
+'''
